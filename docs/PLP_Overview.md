@@ -37,6 +37,6 @@ PLP models use OMOP CDM to extract patient cohorts, preprocess data, and apply m
 
 Recommended Julia packages for this task include:
 
-- **DuckDB.jl**
-- **LibPQ.jl**
-- **MySQL.jl**
+- DuckDB.jl
+- LibPQ.jl
+- MySQL.jl
