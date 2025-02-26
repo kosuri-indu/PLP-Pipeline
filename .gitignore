@@ -3,11 +3,13 @@
 ################################################################################
 
 # Folders to ignore - files may be too large, too many, etc. NOTE: EDIT IF NEEDED.
+omop.duckdb
+/cohort_definitions
 /data
 /videos
 /plots
 /notebooks
-/_research
+/papers
 
 ################################################################################
 #                                    Julia                                     #

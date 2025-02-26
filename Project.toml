@@ -3,5 +3,9 @@ authors = ["kosuri-indu"]
 [compat]
 julia = "1.11.3"
 DrWatson = "2.18.0"
+DuckDB_jll = "1.0.0"
 [deps]
+DBInterface = "a10d1c49-ce27-4219-8d33-6db1a4562965"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+DuckDB = "d2f5444f-75bc-4fdf-ac35-56f514c445e1"
+DuckDB_jll = "2cbbab25-fc8b-58cf-88d4-687a02676033"
