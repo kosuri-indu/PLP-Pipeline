@@ -4,7 +4,10 @@ connection = DBInterface.connect(DuckDB.DB, "data/omop.duckdb")
 
 function test_data()
     # few example tables for querying
-    tables = ["person", "condition_occurrence", "drug_exposure", "visit_occurrence"]
+    tables = [
+        "concept", "concept_relationship", "condition_occurrence", "death",
+        "device_exposure", "drug_exposure", "measurement", "observation", "observation_period", "person", "procedure_occurrence", "visit_occurrence"
+    ]
 
     for table in tables
         println("Checking: $table")
