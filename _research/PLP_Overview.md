@@ -26,12 +26,11 @@ PLP models use OMOP CDM to extract patient cohorts, preprocess data, and apply m
 | Tool                        | Purpose                                      |
 |-----------------------------|----------------------------------------------|
 | DataFrames.jl           | For data manipulation and analysis           |
+| DBInterface.jl          | For database interactions                    |
 | MLJ.jl                  | For machine learning                         |
 | OHDSICohortExpressions.jl | For working with OHDSI cohort expressions    |
-| ATLAS                   | For cohort definition and analysis           |
-| Makie.jl                | For data visualization                       |
 | OMOPCDMCohortCreator.jl | For creating cohorts from OMOP CDM           |
-| DBInterface.jl          | For database interactions                    |
+| Makie.jl                | For data visualization                       |
 
 ### Database Loading
 
