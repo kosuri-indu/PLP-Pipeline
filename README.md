@@ -1,8 +1,6 @@
 # PLP-Pipeline
 
-This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named PLP-Pipeline. 
-
-It is authored by kosuri-indu.
+This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named PLP-Pipeline. It is authored by kosuri-indu.
 
 ## Getting Started
 
