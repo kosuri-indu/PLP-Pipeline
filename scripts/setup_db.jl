@@ -1,6 +1,6 @@
 using DuckDB, DBInterface
 
-connection = DBInterface.connect(DuckDB.DB, "omop.duckdb")
+connection = DBInterface.connect(DuckDB.DB, "data/omop.duckdb")
 
 # the directory where the raw data is stored
 raw_data_dir = joinpath(@__DIR__, "..", "data", "exp_raw")
