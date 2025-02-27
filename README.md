@@ -1,6 +1,6 @@
 # PLP-Pipeline
 
-This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named **PLP-Pipeline**.
+This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named PLP-Pipeline. 
 
 It is authored by kosuri-indu.
 
@@ -50,14 +50,6 @@ To run the machine learning pipeline, use the `run_plp.jl` script:
 julia> include("scripts/run_plp.jl")
 ```
 
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License.
-
 ## TODO List
 
 - [x] Set up project structure
@@ -69,7 +61,6 @@ This project is licensed under the MIT License.
 - [ ] Implement machine learning pipeline in `ml_pipeline.jl`
 - [ ] Add unit tests in `test/runtests.jl`
 - [ ] Improve documentation in `_research` folder
-- [ ] Set up continuous integration with GitHub Actions
 
 ## References
 
