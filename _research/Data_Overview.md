@@ -27,7 +27,6 @@
 | File Name         | Description                                                                 |
 |-------------------|-----------------------------------------------------------------------------|
 | visit_occurrence.parquet | Logs hospital visits, outpatient visits, and other patient encounters. |
-              |
 
 ## 5. Measurements
 
