@@ -6,6 +6,7 @@
 omop.duckdb
 /cohort_definitions
 /data
+.env
 /videos
 /plots
 /notebooks
