@@ -10,8 +10,8 @@ DBInterface.execute(
     connection,
     """
     CREATE TABLE IF NOT EXISTS cohort (
-        subject_id INTEGER,
         cohort_definition_id INTEGER,
+        subject_id INTEGER,
         cohort_start_date DATE,
         cohort_end_date DATE
     )

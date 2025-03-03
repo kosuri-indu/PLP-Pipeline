@@ -1,13 +1,14 @@
 using OHDSICohortExpressions: translate
-using FunSQL, DBInterface, DuckDB, JSON, DataFrames, DotEnv
+using FunSQL, DBInterface, DuckDB, JSON, DataFrames, DotEnv, Parquet
+using Base.Filesystem: basename
 
 function load_cohort_definition(json_path)
     json_data = JSON.parsefile(json_path)
 
-    # having CensoringCriteria caused issue while translating to SQL
     if haskey(json_data, "CensoringCriteria")
         delete!(json_data, "CensoringCriteria")
-        println("Removed CensoringCriteria from: $json_path")
+        base_name = basename(json_path)
+        println("Removed CensoringCriteria from $base_name")
     end
 
     return JSON.json(json_data)
@@ -22,6 +23,21 @@ outcome_cohort_definition = load_cohort_definition(outcome_cohort_json_path)
 
 db_path = joinpath(@__DIR__, "..", "data", "omop.duckdb")
 connection = DBInterface.connect(DuckDB.DB, db_path)
+
+DBInterface.execute(connection, "DROP TABLE IF EXISTS cohort")
+
+DBInterface.execute(
+    connection,
+    """
+    CREATE TABLE IF NOT EXISTS cohort (
+        cohort_definition_id INTEGER,
+        subject_id INTEGER,
+        cohort_start_date DATE,
+        cohort_end_date DATE
+    )
+    """
+)
+println("Cohort table created successfully!")
 
 function process_cohort(cohort_definition, cohort_id)
     try
