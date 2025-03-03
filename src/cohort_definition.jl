@@ -24,21 +24,6 @@ outcome_cohort_definition = load_cohort_definition(outcome_cohort_json_path)
 db_path = joinpath(@__DIR__, "..", "data", "omop.duckdb")
 connection = DBInterface.connect(DuckDB.DB, db_path)
 
-DBInterface.execute(connection, "DROP TABLE IF EXISTS cohort")
-
-DBInterface.execute(
-    connection,
-    """
-    CREATE TABLE IF NOT EXISTS cohort (
-        cohort_definition_id INTEGER,
-        subject_id INTEGER,
-        cohort_start_date DATE,
-        cohort_end_date DATE
-    )
-    """
-)
-println("Cohort table created successfully!")
-
 function process_cohort(cohort_definition, cohort_id)
     try
         println("\nProcessing Cohort $cohort_id...")
