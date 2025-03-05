@@ -26,12 +26,12 @@ connection = DBInterface.connect(DuckDB.DB, db_path)
 
 function process_cohort(cohort_definition, cohort_id)
     try
-        println("\nProcessing Cohort $cohort_id...")
+        println("\nProcessing Cohort $cohort_id")
 
         sql = translate(cohort_definition, cohort_definition_id=cohort_id, dialect=:duckdb)
 
-        if isempty(strip(sql))
-            println(" Generated SQL is empty for cohort $cohort_id, hence skipping execution.")
+        if isempty(sql)
+            println(" Generated SQL is empty for cohort $cohort_id")
             return
         end
 
@@ -42,7 +42,7 @@ function process_cohort(cohort_definition, cohort_id)
                 try
                     DBInterface.execute(connection, stmt)
                 catch e
-                    println("Error statement: ", e)
+                    println("Error: ", e)
                 end
             end
         end
@@ -71,4 +71,3 @@ println("\nTarget Cohort Results:\n", target_df)
 println("Outcome Cohort Results:\n", outcome_df)
 
 DBInterface.close!(connection)
-println("\nCohort definitions processed successfully!")
