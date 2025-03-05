@@ -9,7 +9,7 @@ raw_data_dir = joinpath(@__DIR__, "..", "data", "exp_raw")
 DBInterface.execute(
     connection,
     """
-    CREATE TABLE IF NOT EXISTS cohort (
+    CREATE OR REPLACE TABLE cohort (
         cohort_definition_id INTEGER,
         subject_id INTEGER,
         cohort_start_date DATE,
