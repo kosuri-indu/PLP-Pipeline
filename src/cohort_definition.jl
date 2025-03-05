@@ -34,7 +34,7 @@ function process_cohort(cohort_definition, cohort_id)
             println(" Generated SQL is empty for cohort $cohort_id")
             return
         end
-
+        println(sql)
         statements = split(sql, ";")
         for stmt in statements
             stmt = replace(strip(stmt), r"\s+" => " ")
@@ -67,7 +67,7 @@ process_cohort(outcome_cohort_definition, 2)
 target_df = DataFrame(DBInterface.execute(connection, "SELECT * FROM cohort WHERE cohort_definition_id = 1"))
 outcome_df = DataFrame(DBInterface.execute(connection, "SELECT * FROM cohort WHERE cohort_definition_id = 2"))
 
-println("\nTarget Cohort Results:\n", target_df)
-println("Outcome Cohort Results:\n", outcome_df)
+# println("\nTarget Cohort Results:\n", target_df)
+# println("Outcome Cohort Results:\n", outcome_df)
 
 DBInterface.close!(connection)
