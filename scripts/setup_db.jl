@@ -1,15 +1,26 @@
+using DrWatson
+@quickactivate "PLP-Pipeline"
 
-using DuckDB, DBInterface
+import DBInterface:
+    connect,
+    close!,
+    execute
+import DuckDB:
+    DB
 
-connection = DBInterface.connect(DuckDB.DB, "data/omop.duckdb")
+connection = connect(DB, datadir("exp_raw", "omop.duckdb"))
 
-# the directory where the raw data is stored
-raw_data_dir = joinpath(@__DIR__, "..", "data", "exp_raw")
-
-DBInterface.execute(
+execute(
     connection,
     """
-    CREATE OR REPLACE TABLE cohort (
+    CREATE SCHEMA omopcdm;
+    """
+)
+
+execute(
+    connection,
+    """
+    CREATE TABLE dbt_synthea_dev.cohort (
         cohort_definition_id INTEGER,
         subject_id INTEGER,
         cohort_start_date DATE,
@@ -17,15 +28,17 @@ DBInterface.execute(
     )
     """
 )
-parquet_files = readdir(raw_data_dir, join=true)
+
+parquet_files = readdir(datadir("exp_raw"), join=true)
+filter!(x -> occursin("parquet", x), parquet_files)
 
 for file in parquet_files
     base_name = basename(file)
     table_name = splitext(base_name)[1]
-    println("Loading $base_name into table '$table_name'")
+    println("Loading $base_name into table 'omopcdm.$table_name'")
 
-    DBInterface.execute(connection, "CREATE OR REPLACE TABLE $table_name AS SELECT * FROM read_parquet('$file')")
+    execute(connection, "CREATE OR REPLACE TABLE omopcdm.$table_name AS SELECT * FROM read_parquet('$file')")
 end
 
 println("All Parquet files loaded into DuckDB")
-DBInterface.close!(connection)
+close!(connection)

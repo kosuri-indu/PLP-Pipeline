@@ -1,6 +1,11 @@
-using DuckDB, PrettyTables
+using DrWatson
+@quickactivate "PLP-Pipeline"
 
-connection = DBInterface.connect(DuckDB.DB, "data/omop.duckdb")
+using DBInterface
+using DuckDB
+using PrettyTables
+
+connection = DBInterface.connect(DuckDB.DB, datadir("omop.duckdb"))
 
 function test_data()
     # few example tables for querying

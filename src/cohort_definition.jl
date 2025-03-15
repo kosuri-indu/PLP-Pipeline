@@ -1,68 +1,58 @@
-using OHDSICohortExpressions: translate
-using FunSQL, DBInterface, DuckDB, JSON, DataFrames, DotEnv, Parquet
-using Base.Filesystem: basename
+using DrWatson
+@quickactivate "PLP-Pipeline"
 
-function load_cohort_definition(json_path)
-    json_data = JSON.parsefile(json_path)
+import Base.Filesystem: 
+    basename
+import DBInterface:
+    connect,
+    execute
+import FunSQL:
+    reflect,
+    render
+import OHDSICohortExpressions: 
+    translate
 
-    if haskey(json_data, "CensoringCriteria")
-        delete!(json_data, "CensoringCriteria")
-        base_name = basename(json_path)
-        println("Removed CensoringCriteria from $base_name")
-    end
+using DuckDB
+using DataFrames
 
-    return JSON.json(json_data)
+target_cohort_json_path = datadir("exp_raw", "definitions", "Hypertension.json")
+outcome_cohort_json_path = datadir("exp_raw", "definitions", "Diabetes.json")
+
+target_cohort_definition = read(target_cohort_json_path, String)
+outcome_cohort_definition = read(outcome_cohort_json_path, String)
+
+connection = DBInterface.connect(DuckDB.DB, datadir("exp_raw", "DATABASE_NAME"))
+
+function process_cohort(cohort_definition, cohort_definition_id, conn;)
+
+    catalog = reflect(
+        connection;
+        schema = "dbt_synthea_dev",
+        dialect = :duckdb
+    )
+
+    fun_sql = translate(    
+      cohort_definition,    
+      cohort_definition_id = cohort_definition_id);
+
+    sql = render(catalog, fun_sql);
+
+    res = execute(conn,    
+      """    
+      INSERT INTO        
+        dbt_synthea_dev.cohort    
+      SELECT        
+        *    
+      FROM        
+        ($sql) 
+      AS 
+        foo;    
+      """
+    )
 end
 
-base_dir = @__DIR__
-target_cohort_json_path = joinpath(base_dir, "..", "data", "cohort_definitions", "Atrial_Fibrillation.json")
-outcome_cohort_json_path = joinpath(base_dir, "..", "data", "cohort_definitions", "Ischemic_Stroke.json")
-
-target_cohort_definition = load_cohort_definition(target_cohort_json_path)
-outcome_cohort_definition = load_cohort_definition(outcome_cohort_json_path)
-
-db_path = joinpath(@__DIR__, "..", "data", "omop.duckdb")
-connection = DBInterface.connect(DuckDB.DB, db_path)
-
-function process_cohort(cohort_definition, cohort_id)
-    try
-        println("\nProcessing Cohort $cohort_id")
-
-        sql = translate(cohort_definition, cohort_definition_id=cohort_id, dialect=:duckdb)
-
-        if isempty(sql)
-            println(" Generated SQL is empty for cohort $cohort_id")
-            return
-        end
-        println(sql)
-        statements = split(sql, ";")
-        for stmt in statements
-            stmt = replace(strip(stmt), r"\s+" => " ")
-            if !isempty(stmt)
-                try
-                    DBInterface.execute(connection, stmt)
-                catch e
-                    println("Error: ", e)
-                end
-            end
-        end
-
-        insert_query = """
-            INSERT INTO cohort (cohort_definition_id, subject_id, cohort_start_date, cohort_end_date)
-            SELECT $cohort_id, person_id, start_date, end_date FROM temp_1
-        """
-
-        DBInterface.execute(connection, insert_query)
-
-        println("Cohort $cohort_id inserted successfully!")
-        DBInterface.execute(connection, "DROP TABLE IF EXISTS temp_1")
-    catch e
-        println("Error processing cohort $cohort_id: ", e)
-    end
-end
-
-process_cohort(target_cohort_definition, 1)
-process_cohort(outcome_cohort_definition, 2)
+process_cohort(target_cohort_definition, 1, connection)
+process_cohort(outcome_cohort_definition, 2, connection)
 
 target_df = DataFrame(DBInterface.execute(connection, "SELECT * FROM cohort WHERE cohort_definition_id = 1"))
 outcome_df = DataFrame(DBInterface.execute(connection, "SELECT * FROM cohort WHERE cohort_definition_id = 2"))
