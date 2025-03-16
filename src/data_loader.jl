@@ -1,11 +1,14 @@
 using DrWatson
 @quickactivate "PLP-Pipeline"
 
-using DBInterface
+import DBInterface: 
+    connect, 
+    close!, 
+    execute
 using DuckDB
-using PrettyTables
+using DataFrames
 
-connection = DBInterface.connect(DuckDB.DB, datadir("exp_raw", "synthea_1M_3YR.duckdb"))
+connection = connect(DuckDB.DB, datadir("exp_raw", "synthea_1M_3YR.duckdb"))
 
 const SCHEMA = "dbt_synthea_dev"
 
@@ -34,4 +37,4 @@ end
 
 test_data()
 
-DBInterface.close!(connection)
+close!(connection)

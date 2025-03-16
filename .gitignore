@@ -6,6 +6,7 @@
 # /data
 synthea_1M_3YR.duckdb
 .env
+exp_pro
 /videos
 # /plots
 # /notebooks
