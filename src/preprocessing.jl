@@ -2,25 +2,45 @@ using DrWatson
 @quickactivate "PLP-Pipeline"
 
 import CSV
-import DataFrames: DataFrame, nrow, select!
-import CategoricalArrays: categorical
-import MLJ: partition
-import Statistics: mean, std
+import DataFrames: 
+    DataFrame, 
+    nrow, 
+    select!,
+    names, 
+    eachcol
+import InvertedIndices: 
+    Not
+import CategoricalArrays: 
+    categorical
+import MLJ: 
+    partition
+import Statistics: 
+    mean, 
+    std
 
 function preprocess_data()
-    println("Loading dataset...")
     df = CSV.read(datadir("exp_pro", "plp_final.csv"), DataFrame)
 
-    # Drop irrelevant columns
+    # drop columns with no values
     select!(df, Not([:total_quantity, :max_observation_value]))
-
-    # Fill missing values with 0
-    df[!, :] .= coalesce.(df, 0)
-
-    # Standardize numerical features
-    num_features = [:year_of_birth, :condition_count, :drug_count, :total_days_supply,
-                     :max_common_route, :max_measurement_value, :max_common_unit, :procedure_count, :observation_count]
     
+    # imputing missing values:
+    # numeric columns, replace missing with 0
+    # categorical columns, replace missing with "unknown"
+    for col in names(df)
+        if eltype(df[!, col]) <: Union{Missing, Number}
+            df[!, col] = coalesce.(df[!, col], 0)
+        elseif eltype(df[!, col]) <: Union{Missing, AbstractString}
+            df[!, col] = coalesce.(df[!, col], "unknown")
+        else
+            df[!, col] = coalesce.(df[!, col], "unknown")
+        end
+    end
+
+    # standardize numerical features
+    num_features = [:age, :condition_count, :drug_count, :total_days_supply,
+                    :max_common_route, :max_measurement_value, :max_common_unit,
+                    :procedure_count, :observation_count]
     for col in num_features
         col_std = std(df[!, col])
         if col_std != 0
@@ -28,17 +48,15 @@ function preprocess_data()
         end
     end
 
-    # Encode categorical variables
-    df.gender_concept_id = categorical(df.gender_concept_id)
-    df.race_concept_id = categorical(df.race_concept_id)
-    df.ethnicity_concept_id = categorical(df.ethnicity_concept_id)
+    # encoding categorical variables
+    df.gender_concept_id = categorical(coalesce.(df.gender_concept_id, "unknown"))
+    df.race_concept_id = categorical(coalesce.(df.race_concept_id, "unknown"))
+    df.ethnicity_concept_id = categorical(coalesce.(df.ethnicity_concept_id, "unknown"))
 
-    # Train-test split (80-20)
+    # train-test split (80-20)
     train, test = partition(df, 0.8, shuffle=true)
-
     println("Train size: ", nrow(train), " | Test size: ", nrow(test))
 
-    # Save processed data
     CSV.write(datadir("exp_pro", "train.csv"), train)
     CSV.write(datadir("exp_pro", "test.csv"), test)
 

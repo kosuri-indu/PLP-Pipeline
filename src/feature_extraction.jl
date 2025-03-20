@@ -1,23 +1,29 @@
 using DrWatson
 @quickactivate "PLP-Pipeline"
 
+import InvertedIndices: 
+       Not
 import DBInterface: 
-    connect, 
-    close!, 
-    execute
+       connect, 
+       close!,
+       execute
 import DuckDB: 
-    DB
+       DB
 import DataFrames: 
-    DataFrame, 
-    outerjoin
+       DataFrame, 
+       outerjoin, 
+       select!
 import CSV
+import Dates: 
+       year, 
+       today
 
 connection = connect(DB, datadir("exp_raw", "synthea_1M_3YR.duckdb"))
 
 const SCHEMA = "dbt_synthea_dev"
 const COHORT_TABLE = "cohort"
-const TARGET_COHORT_ID = 1  # hypertension cohort
-const RECENT_DAYS = 365  # 1-year history window
+const TARGET_COHORT_ID = 1 # hypertension 
+const RECENT_DAYS = 365 # 1-year history window
 
 # Demographics: age, gender, race, ethnicity
 demographics_query = """
@@ -31,6 +37,12 @@ JOIN $SCHEMA.person p ON c.subject_id = p.person_id
 WHERE c.cohort_definition_id = $TARGET_COHORT_ID
 """
 demographics_df = execute(connection, demographics_query) |> DataFrame
+
+# created new age column from year_of_birth using current year as reference,
+# and dropped the original year_of_birth column
+ref_year = year(today())
+demographics_df[!, :age] = ref_year .- demographics_df[!, :year_of_birth]
+select!(demographics_df, Not(:year_of_birth))
 
 # Conditions: count of parent & child conditions before index
 conditions_query = """
@@ -112,4 +124,4 @@ features_df = outerjoin(features_df, observations_df, on=:subject_id)
 CSV.write(datadir("exp_pro", "plp_features.csv"), features_df)
 println("Feature extraction complete!")
 
-close!(connection) 
+close!(connection)
