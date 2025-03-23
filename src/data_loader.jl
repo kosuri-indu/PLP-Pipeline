@@ -30,7 +30,7 @@ function test_data()
         println("Checking: $table")
         query = "SELECT * FROM $SCHEMA.$table LIMIT 5"
         result = DBInterface.execute(connection, query)
-        pretty_table(result)
+        println(DataFrames.DataFrame(result))
         println("\n")
     end
 end
