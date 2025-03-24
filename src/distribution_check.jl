@@ -29,7 +29,7 @@ function describe_features()
             println("- Min: ", minimum(nonmissing))
             println("- Max: ", maximum(nonmissing))
         else
-            println("  Unique values: ", length(unique(col_data)))
+            println("- Unique values: ", length(unique(col_data)))
         end
         println()
     end
