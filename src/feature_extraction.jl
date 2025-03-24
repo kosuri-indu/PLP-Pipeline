@@ -23,7 +23,7 @@ connection = connect(DB, datadir("exp_raw", "synthea_1M_3YR.duckdb"))
 const SCHEMA = "dbt_synthea_dev"
 const COHORT_TABLE = "cohort"
 const TARGET_COHORT_ID = 1 # hypertension 
-const RECENT_DAYS = 1095 # 3-year history window
+const RECENT_DAYS = 365 # 1-year history window
 
 # Demographics: age, gender, race, ethnicity
 demographics_query = """
