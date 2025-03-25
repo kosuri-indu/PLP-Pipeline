@@ -18,7 +18,8 @@ import MLJ:
     fit!, 
     predict
 using ROCAnalysis
-using Distributions 
+using Distributions
+using MLJXGBoostInterface 
 
 train_df = CSV.read(datadir("exp_pro", "train.csv"), DataFrame)
 test_df  = CSV.read(datadir("exp_pro", "test.csv"), DataFrame)
@@ -53,3 +54,8 @@ println("L1-regularized Logistic Regression AUC: ", auc_logreg)
 rf_model = MLJDecisionTreeInterface.RandomForestClassifier(n_trees=100, max_depth=10)
 auc_rf, mach_rf = evaluate_model(rf_model, X_train, y_train, X_test, y_test)
 println("Random Forest AUC: ", auc_rf)
+
+# XGBoost
+gbm_model = MLJXGBoostInterface.XGBoostClassifier(num_round=100, max_depth=5, eta=0.1)
+auc_gbm, mach_gbm = evaluate_model(gbm_model, X_train, y_train, X_test, y_test)
+println("XGBoost AUC: ", auc_gbm)

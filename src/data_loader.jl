@@ -7,6 +7,7 @@ import DBInterface:
     execute
 using DuckDB
 using DataFrames
+using PrettyTables
 
 connection = connect(DuckDB.DB, datadir("exp_raw", "synthea_1M_3YR.duckdb"))
 
@@ -30,7 +31,7 @@ function test_data()
         println("Checking: $table")
         query = "SELECT * FROM $SCHEMA.$table LIMIT 5"
         result = DBInterface.execute(connection, query)
-        println(DataFrames.DataFrame(result))
+        pretty_table(result)
         println("\n")
     end
 end
