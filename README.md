@@ -1,19 +1,22 @@
 # PLP-Pipeline
 
-This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named PLP-Pipeline. It is authored by kosuri-indu.
+This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named PLP-Pipeline. It is authored by *kosuri-indu*, demonstrates a pipeline for patient-level prediction. Special thanks to [@TheCedarPrince](https://github.com/TheCedarPrince) for guiding this project.
+
 
 ## Getting Started
 
 To (locally) reproduce this project, do the following:
 
-1. Download this code base. Notice that raw data are typically not included in the git-history and may need to be downloaded independently.
-2. Open a Julia console and do:
+1. Download the Code Base 
+   *Note:* Raw data are not included in the repository. You will need to download them separately.
+
+2. Set Up the Julia Environment
+   Open a Julia console and execute:
    ```julia
-   julia> using Pkg
-   julia> Pkg.add("DrWatson") # install globally, for using `quickactivate`
-   julia> Pkg.activate("path/to/this/project")
-   julia> Pkg.instantiate()
-   ```
+   using Pkg
+   Pkg.add("DrWatson")        # Install DrWatson globally
+   Pkg.activate("path/to/this/project")
+   Pkg.instantiate()          # Install all necessary packages
 
 This will install all necessary packages for you to be able to run the scripts and everything should work out of the box, including correctly finding local paths.
 
@@ -26,17 +29,9 @@ which auto-activate the project and enable local path handling from DrWatson.
 
 ## Usage
 
-### Downloading Data
-
-To download the synthetic data from Zenodo, run the `download_data.jl` script:
-```julia
-julia> include("src/download_data.jl")
-```
-**Note**: As the data files are large, it is recommended to download them manually from [Zenodo](https://zenodo.org/record/14674051) and place them in the `data/exp_raw` directory.
-
 ### Setting Up the Database
 
-To set up the DuckDB database with the downloaded data, run the `setup_db.jl` script:
+Set up the DuckDB database with your data by running:
 ```julia
 julia> include("scripts/setup_db.jl")
 ```
@@ -50,15 +45,25 @@ julia> include("scripts/run_plp.jl")
 
 ## TODO List
 
-- [x] Set up project structure
-- [x] Add initial data download script
-- [x] Add database setup script
-- [ ] Implement data loading functions in `data_loader.jl`
-- [ ] Implement cohort extraction in `cohort_extraction.jl`
-- [ ] Implement feature engineering in `feature_engineering.jl`
-- [ ] Implement machine learning pipeline in `ml_pipeline.jl`
-- [ ] Add unit tests in `test/runtests.jl`
-- [ ] Improve documentation in `_research` folder
+- Documentation & Research
+  - [x] Add initial documentation in the `_research` folder
+  - Expand documentation with detailed research questions and hypotheses
+
+- Core Pipeline Implementation
+  - [x] Set up project structure with DrWatson
+  - [x] Database setup (`setup_db.jl`)
+  - [x] Data loading (`data_loader.jl`)
+  - [x] Cohort definition (`cohort_definition.jl`)
+  - [x] Feature extraction (`feature_extraction.jl`)
+  - [x] Distribution check (`distribution_check.jl`)
+  - [x] Outcome attachment (`outcome_attach.jl`)
+  - [x] Data preprocessing (`preprocessing.jl`)
+  - [x] Model training & evaluation (`train_model.jl`)
+
+- Future Enhancements
+  - Add robust error handling and logging
+  - Refine research questions and incorporate additional clinical variables
+  - Develop tests and expand documentation further
 
 ## References
 
