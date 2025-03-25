@@ -2,6 +2,9 @@
 
 This code base is using the [Julia Language](https://julialang.org/) and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) to make a reproducible scientific project named PLP-Pipeline. It is authored by *kosuri-indu*, demonstrates a pipeline for patient-level prediction. Special thanks to [@TheCedarPrince](https://github.com/TheCedarPrince) for guiding this project.
 
+## Research Question
+- Can we predict the onset of *diabetes* in patients diagnosed with *hypertension* using patient-level observational healthcare data?  
+- The goal is to build a predictive model that identifies patterns from historical healthcare data to determine which patients with hypertension are more likely to develop diabetes.
 
 ## Getting Started
 
