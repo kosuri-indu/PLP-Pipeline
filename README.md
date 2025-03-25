@@ -47,7 +47,7 @@ julia> include("scripts/run_plp.jl")
 
 - Documentation & Research
   - [x] Add initial documentation in the `_research` folder
-  - Expand documentation with detailed research questions and hypotheses
+  - [ ] Expand documentation with detailed research questions and hypotheses
 
 - Core Pipeline Implementation
   - [x] Set up project structure with DrWatson
@@ -61,9 +61,9 @@ julia> include("scripts/run_plp.jl")
   - [x] Model training & evaluation (`train_model.jl`)
 
 - Future Enhancements
-  - Add robust error handling and logging
-  - Refine research questions and incorporate additional clinical variables
-  - Develop tests and expand documentation further
+  - [ ] Add robust error handling and logging
+  - [ ] Refine research questions and incorporate additional clinical variables
+  - [ ] Develop tests and expand documentation further
 
 ## References
 
